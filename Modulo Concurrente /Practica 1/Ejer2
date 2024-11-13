@@ -1,1 +1,76 @@
-
+programa Ejer2
+procesos
+  proceso orientarRobot(E num:numero)
+  comenzar
+    repetir num
+      derecha
+  fin
+  proceso juntarPapeles (ES cant:numero)
+  comenzar
+    mientras(HayPapelEnLaEsquina)
+      tomarPapel
+      cant:= cant +1
+  fin
+  proceso recorrerPerimetro
+  variables
+    cant:numero
+  comenzar
+    cant:=0
+    repetir 19
+      juntarPapeles(cant)
+      mover
+    Informar("Papepeles Juntados", cant)
+  fin
+areas
+  AreaVerticeR1: AreaPC (10,10,10,10)
+  AreaVerticeR2: AreaPC (10,29,10,29)
+  AreaVerticeR3: AreaPC (29,29,29,29)
+  AreaVerticeR4: AreaPC (29,10,29,10)
+  AreaR1: AreaP (10,11,10,28)
+  AreaR2: AreaP (11,29,28,29)
+  AreaR3: AreaP (29,11,29,28)
+  AreaR4: AreaP (11,10,28,10)
+robots
+  robot robot1
+  comenzar
+    recorrerPerimetro
+  fin
+  robot robot2
+  comenzar
+    derecha
+    recorrerPerimetro
+  fin
+  robot robot3
+  comenzar
+    orientarRobot(2)
+    recorrerPerimetro
+  fin
+  robot robot4
+  comenzar
+    orientarRobot(3)
+    recorrerPerimetro
+  fin  
+variables
+  r1 : robot1
+  r2 : robot2
+  r3 : robot3
+  r4 : robot4
+comenzar
+  AsignarArea(r1,AreaR1)
+  AsignarArea(r1,AreaVerticeR1)
+  AsignarArea(r4,AreaVerticeR1)
+  AsignarArea(r2,AreaVerticeR1)
+  AsignarArea(r2,AreaR2)
+  AsignarArea(r1,AreaVerticeR2)
+  AsignarArea(r2,AreaVerticeR2)
+  AsignarArea(r3,AreaR3)
+  AsignarArea(r3,AreaVerticeR3)
+  AsignarArea(r2,AreaVerticeR3)
+  AsignarArea(r4,AreaR4)
+  AsignarArea(r3,AreaVerticeR4)
+  AsignarArea(r4,AreaVerticeR4)
+  Iniciar(r1,10,10)
+  Iniciar(r2,10,29)
+  Iniciar(r3,29,29)
+  Iniciar(r4,29,10)
+fin
