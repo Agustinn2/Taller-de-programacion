@@ -1,0 +1,99 @@
+programa Ejer2
+procesos
+  proceso contarFlores(ES cantF: numero)
+  variables  
+    auxF:numero
+  comenzar
+    auxF:=0
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor
+      auxF:=auxF+1
+      cantF:=cantF+1
+    repetir auxF
+      depositarFlor
+  fin
+  proceso contarPapeles(ES cantP:numero)
+  variables  
+    auxP:numero
+  comenzar
+    auxP:=0
+    mientras(HayPapelEnLaEsquina)
+      tomarPapel
+      auxP:=auxP + 1
+      cantP:= cantP + 1
+    repetir auxP
+      depositarPapel 
+  fin
+  proceso contarPapelesYFlores(ES cantP:numero; ES cantF:numero)
+  comenzar
+    contarPapeles(cantP)
+    contarFlores(cantF)
+  fin
+  proceso orientarRobot
+  comenzar
+    repetir 3
+      derecha
+  fin
+  proceso compararFloresPapeles(E cantF:numero; E cantP:numero ; ES cantEnviar:numero)
+  comenzar
+    si(cantF> cantP)
+      cantEnviar:= cantEnviar + 1
+  fin
+  proceso recorrerEscalon(ES cant:numero)
+  variables
+    largo:numero
+    cantF:numero
+    cantP:numero
+  comenzar
+    cantF:=0
+    cantP:=0
+    Random(largo,1,5)
+    repetir largo
+      contarPapelesYFlores(cantP,cantF)
+      mover
+    contarPapelesYFlores(cantP,cantF)
+    derecha
+    mover
+    compararFloresPapeles(cantF,cantP,cant)
+  fin
+  proceso recorrerEscalera(ES cant:numero)
+  comenzar
+    repetir 4
+      recorrerEscalon(cant)
+      orientarRobot
+  fin
+areas
+  ciudad: AreaC (1,1,100,100)
+robots
+  robot tipo1
+  variables
+    cant:numero
+  comenzar
+    cant:=0
+    recorrerEscalera(cant)
+    EnviarMensaje(cant,r0)
+  fin
+  robot jefe
+  variables
+    sumaT:numero
+    aux:numero
+  comenzar
+    sumaT:=0
+    repetir 3
+      RecibirMensaje(aux,*)
+      sumaT:=sumaT + aux
+    Informar(sumaT)
+  fin
+variables
+  r1,r2,r3: tipo1
+  r0:jefe
+comenzar
+  AsignarArea(r0,ciudad)
+  AsignarArea(r1,ciudad)
+  AsignarArea(r2,ciudad)
+  AsignarArea(r3,ciudad)
+  Iniciar(r0,1,1)
+  Iniciar(r1,2,1)
+  Iniciar(r2,7,1)
+  Iniciar(r3,12,1)
+fin
