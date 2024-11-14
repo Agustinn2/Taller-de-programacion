@@ -1,0 +1,60 @@
+programa Ejer1
+procesos
+  proceso limpiarFlores(ES cant:numero)
+  comenzar
+    mientras (HayFlorEnLaEsquina)
+      tomarFlor
+      cant:=cant+1
+  fin
+  proceso recorrerAvenida(ES cant:numero)
+  comenzar
+    repetir 9
+      limpiarFlores(cant)
+      mover
+    limpiarFlores(cant)
+  fin
+areas
+  AreaR1 : AreaP (1,1,1,10)
+  AreaR2 : AreaP (2,11,2,20)
+robots
+  robot robot1
+  variables
+    cant:numero
+    cantR2:numero
+    diferencia:numero
+  comenzar
+    cant:=0
+    recorrerAvenida(cant)
+    EnviarMensaje(cant,r2)
+    RecibirMensaje(cantR2,r2)
+    diferencia:=cant - cantR2
+    si(cant > cantR2)
+      Informar("gano_R1_por_dif_de",diferencia)
+    si(diferencia = 0)
+      Informar("huboEmpate",diferencia)
+  fin
+  robot robot2
+  variables
+    cant:numero
+    cantR1:numero
+    diferencia:numero
+  comenzar
+    cant:=0
+    recorrerAvenida(cant)
+    EnviarMensaje(cant,r1)
+    RecibirMensaje(cantR1,r1)
+    diferencia:=cant - cantR1
+    si(cant > cantR1)
+      Informar("gano_R2_por_dif_de",diferencia)
+    si(diferencia = 0)
+      Informar("huboEmpate",diferencia)
+  fin
+variables
+  r1:robot1
+  r2:robot2 
+comenzar
+  AsignarArea(r1, AreaR1)
+  AsignarArea(r2,AreaR2)
+  Iniciar(r1, 1,1)
+  Iniciar(r2, 2,11)
+fin
