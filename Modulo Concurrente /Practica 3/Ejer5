@@ -1,0 +1,89 @@
+programa ejer5
+procesos
+  proceso verificarFuente (ES seguir:boolean;E miAv:numero;E miCa:numero)
+  comenzar
+    BloquearEsquina(11,11)
+    Pos(11,11)
+    si(HayPapelEnLaEsquina)
+      tomarPapel
+    sino
+      seguir:=F
+    Pos(miAv,miCa)
+    LiberarEsquina(11,11)
+  fin 
+  proceso recorrerAvenida(ES seguir:boolean; ES miCa:numero)
+  variables
+    miAv:numero
+  comenzar
+    miAv:=PosAv
+    miCa:=PosCa
+    verificarFuente(seguir,miAv,miCa)
+    si(seguir)
+      depositarPapel
+      mover
+  fin 
+areas
+  AreaR1:AreaP(4,1,4,100)
+  AreaR2:AreaP(6,1,6,100)
+  AreaR3:AreaP(8,1,8,100)
+  AreaR4:AreaP(10,1,10,100)
+  AreaJ: AreaP(1,1,1,1)
+  AreaFuente: AreaPC (11,11,11,11)
+robots
+  robot corredores
+  variables
+    ID,miCa:numero
+    seguir:boolean
+  comenzar
+    RecibirMensaje(ID,r0)
+    seguir:=V
+    mientras(seguir) & (miCa < 99)    
+      recorrerAvenida(seguir,miCa)
+    EnviarMensaje(ID,r0)
+    EnviarMensaje(miCa,r0)
+  fin
+  robot coordinador
+  variables
+    auxID,auxCa,ganador,maxCa:numero
+  comenzar
+    maxCa:=-1
+    EnviarMensaje(1,r1)
+    EnviarMensaje(2,r2)
+    EnviarMensaje(3,r3)
+    EnviarMensaje(4,r4)
+    repetir 4
+      RecibirMensaje(auxID, *)
+      si(auxID = 1)
+        RecibirMensaje(auxCa,r1)
+      sino
+        si(auxID = 2)
+          RecibirMensaje(auxCa,r2)
+        sino
+          si(auxID = 3)
+            RecibirMensaje(auxCa,r3)
+          sino
+            RecibirMensaje(auxCa,r4)
+      si(auxCa > maxCa)
+        maxCa:=auxCa
+        ganador:=auxID
+    Informar("Robot_Mas_Lejos",ganador)
+  fin
+variables
+  r1,r2,r3,r4:corredores
+  r0:coordinador
+comenzar
+  AsignarArea(r1,AreaR1)
+  AsignarArea(r2,AreaR2)
+  AsignarArea(r3,AreaR3)
+  AsignarArea(r4,AreaR4)
+  AsignarArea(r0,AreaJ)
+  AsignarArea(r1,AreaFuente)
+  AsignarArea(r2,AreaFuente)
+  AsignarArea(r3,AreaFuente)
+  AsignarArea(r4,AreaFuente)
+  Iniciar(r1,4,1)
+  Iniciar(r2,6,1)
+  Iniciar(r3,8,1)
+  Iniciar(r4,10,1)
+  Iniciar(r0,1,1)
+fin
