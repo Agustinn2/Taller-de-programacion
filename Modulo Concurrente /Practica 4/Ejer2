@@ -1,0 +1,99 @@
+programa Ejer2
+procesos
+  proceso dejarPapeles(ES cant:numero)
+  comenzar
+    repetir cant
+      depositarPapel
+  fin
+  proceso juntarPapeles(ES cant:numero)
+  comenzar
+    mientras((cant < 5) & (HayPapelEnLaEsquina))
+      tomarPapel
+      cant:=cant+1
+  fin
+  proceso recorrerAvenida (ES cant:numero)
+  comenzar
+    juntarPapeles(cant)
+    si((PosCa < 100) & (cant <> 5))
+      mover
+  fin
+  proceso contarPapeles (E cantP:numero; ES cumple:boolean)
+  variables
+    aux:numero
+  comenzar
+    aux:=0
+    cumple:=F
+    mientras((aux < cantP) & (HayPapelEnLaEsquina))
+      tomarPapel
+      aux:=aux+1
+    si(aux = cantP)
+      cumple:=V
+    sino
+      mientras(HayPapelEnLaBolsa)
+        depositarPapel
+  fin
+areas
+  AreaR1: AreaP (5,1,5,100)
+  AreaR2: AreaP (10,1,10,100)
+  AreaDeposito: AreaC (50,50,50,50)
+  AreaR3: AreaP (11,1,11,1)
+  AreaR4:AreaP (12,1,12,1)
+  
+robots
+  robot productor
+  variables
+    miAv,miCa:numero
+    cantP:numero
+  comenzar
+    cantP:=0
+    mientras((PosCa < 100) | (HayPapelEnLaEsquina))
+      miAv:=PosAv
+      miCa:=PosCa
+      recorrerAvenida(cantP)
+      si(cantP = 5)
+        BloquearEsquina(50,50)
+        Pos(50,50)
+        dejarPapeles(cantP)
+        Pos(miAv,miCa)
+        LiberarEsquina(50,50)
+        cantP:=0
+  fin
+  robot consumidor
+  variables
+    cantP,intento:numero
+    miAv,miCa:numero
+    cumple:boolean
+  comenzar
+    miAv:=PosAv
+    miCa:=PosCa
+    intento:=0
+    mientras(intento <> 8)
+      Random(cantP,2,5)
+      BloquearEsquina(50,50)
+      Pos(50,50)
+      contarPapeles(cantP,cumple) {SI CUMPLE JUNTA FLORES DENTRO DEL PROCESO}
+      si(~cumple)
+        intento:=intento+1
+      Pos(miAv,miCa)
+      LiberarEsquina(50,50)
+      si(cumple)
+        dejarPapeles(cantP)
+        intento:=0 
+  fin             
+variables
+  r1,r2: productor
+  r3,r4: consumidor
+comenzar
+  AsignarArea(r1, AreaR1)
+  AsignarArea(r2, AreaR2)
+  AsignarArea(r3, AreaR3)
+  AsignarArea(r4, AreaR4)
+  AsignarArea(r1,AreaDeposito)
+  AsignarArea(r2,AreaDeposito)
+  AsignarArea(r3,AreaDeposito)
+  AsignarArea(r4,AreaDeposito)
+  Iniciar(r1, 5,1)
+  Iniciar(r2, 10,1)
+  Iniciar(r3, 11,1)
+  Iniciar(r4, 12,1)
+fin
