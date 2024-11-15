@@ -1,0 +1,147 @@
+programa Ejer2
+procesos
+  proceso juntarPapeles(ES cant:numero)
+  comenzar
+    mientras(HayPapelEnLaEsquina)
+      tomarPapel
+      cant:=cant+1
+  fin
+  proceso juntarFlores(ES cant:numero)
+  comenzar
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor
+      cant:=cant+1
+  fin
+  proceso orientarRobot(E aux:numero)
+  comenzar
+    repetir aux
+      derecha
+  fin
+  proceso recorrerEscalonFlores1(E pasos:numero; E escalon:numero; ES cant:numero)
+  comenzar
+    repetir pasos
+      mover
+    juntarFlores(cant)
+    orientarRobot(1)
+    si(escalon = 5)
+      BloquearEsquina(PosAv+1,PosCa)
+    repetir pasos
+      mover
+    juntarFlores(cant)
+    si(escalon = 5)
+      orientarRobot(2)
+      mover
+      LiberarEsquina(PosAv+1,PosCa)
+    sino
+      orientarRobot(3)
+  fin
+  proceso recorrerEscalonPapeles1(E pasos:numero; E escalon:numero; ES cant:numero)
+  comenzar
+    repetir pasos
+      mover
+    juntarPapeles(cant)
+    orientarRobot(3)
+    si(escalon = 5)
+      BloquearEsquina(PosAv-1,PosCa)
+    repetir pasos
+      mover
+    juntarPapeles(cant)
+    si(escalon = 5)
+      orientarRobot(2)
+      mover
+      LiberarEsquina(PosAv-1,PosCa)
+    sino
+      orientarRobot(1)   
+  fin
+  proceso recorrerEscalera1 (E soy:numero; ES cant:numero)
+  variables
+    pasos,escalon:numero
+  comenzar
+    escalon:=1
+    pasos:=5
+    repetir 5
+      si(soy = 1)
+        recorrerEscalonFlores1(pasos,escalon,cant)
+      sino
+        recorrerEscalonPapeles1(pasos,escalon,cant)
+      pasos:=pasos-1
+      escalon:=escalon+1
+  fin
+  proceso recorrerEscalonFlores2(E pasos:numero; ES cant:numero)
+  comenzar
+    repetir pasos
+      mover
+    juntarFlores(cant)
+    orientarRobot(1)
+    repetir pasos
+      mover
+    juntarFlores(cant)
+    orientarRobot(3)
+  fin
+  proceso recorrerEscalonPapeles2(E pasos:numero; ES cant:numero)
+  comenzar
+    repetir pasos
+      mover
+    juntarPapeles(cant)
+    orientarRobot(3)
+    repetir pasos
+      mover
+    juntarPapeles(cant)
+    orientarRobot(1)
+  fin
+  proceso recorrerEscalera2 (E soy:numero;ES cant:numero)
+  variables
+    pasos:numero
+  comenzar
+    pasos:=2
+    repetir 4
+      si(soy = 1)
+        recorrerEscalonFlores2(pasos,cant)
+      sino
+        recorrerEscalonPapeles2(pasos,cant)
+      pasos:=pasos+1
+  fin
+areas
+  AreaJ: AreaP (15,1,15,1)
+  Area: AreaPC (1,2,31,30)
+  AreaR1: AreaPC (1,1,1,2)
+  AreaR2: AreaPC (31,1,31,2)
+robots
+  robot participantes
+  variables
+    soy,cant:numero
+  comenzar
+    cant:=0
+    RecibirMensaje(soy,r0)
+    recorrerEscalera1(soy,cant)
+    EnviarMensaje(soy,r0)
+    recorrerEscalera2(soy,cant)
+    Informar(cant)
+    EnviarMensaje(V,r0)
+  fin
+  robot jefe
+  variables
+    ganador,perdedor:numero
+    ok:boolean
+  comenzar
+    EnviarMensaje(1,r1)
+    EnviarMensaje(2,r2)
+    RecibirMensaje(ganador,*)
+    RecibirMensaje(perdedor,*)
+    repetir 2
+      RecibirMensaje(ok,*)
+    Informar("Ganador_robot",ganador)
+  fin
+variables
+  r1,r2: participantes
+  r0: jefe
+comenzar
+  AsignarArea(r0, AreaJ)
+  AsignarArea(r1,Area)
+  AsignarArea(r2,Area)
+  AsignarArea(r1,AreaR1)
+  AsignarArea(r2,AreaR2)
+  Iniciar(r1,1,1)
+  Iniciar(r2,31,1)
+  Iniciar(r0,15,1)
+fin
