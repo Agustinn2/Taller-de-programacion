@@ -1,0 +1,97 @@
+programa Ejer4
+procesos
+  proceso juntarFlores
+  comenzar
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor
+  fin
+areas
+  AreaJ : AreaP(1,1,1,1)
+  AreaR1 : AreaP (9,9,9,9)
+  AreaR2: AreaP (9,10,9,10)
+  AreaR3: AreaP (9,11,9,11)
+  AreaR4: AreaP (9,12,9,12)
+  AreaTrabajo: AreaPC(10,10,11,11)
+robots
+  robot recolectores
+  variables
+    ID,calle:numero
+    seguir,soyUltimo:boolean
+  comenzar
+    RecibirMensaje(ID,r0)
+    seguir:=V
+    calle:=PosCa
+    mientras(seguir)
+      BloquearEsquina(10,10)
+      Pos(10,10)
+      si(HayFlorEnLaEsquina)
+        tomarFlor
+        BloquearEsquina(11,11)
+        Pos(11,11)
+        LiberarEsquina(10,10)
+        depositarFlor
+        Pos(9,calle)
+        LiberarEsquina(11,11)
+      sino
+        seguir:=F
+        Pos(9,calle)
+        LiberarEsquina(10,10)
+    EnviarMensaje(ID,r0)
+    RecibirMensaje(soyUltimo,r0)
+    si(soyUltimo)
+      Pos(11,11)
+      juntarFlores
+  fin
+  robot coordinador
+  variables
+    ultimo:numero
+  comenzar
+    EnviarMensaje(1,r1)
+    EnviarMensaje(2,r2)
+    EnviarMensaje(3,r3)
+    EnviarMensaje(4,r4)
+    repetir 4
+      RecibirMensaje(ultimo,*)
+    si(ultimo = 1)
+      EnviarMensaje(V,r1)
+      EnviarMensaje(F,r2)
+      EnviarMensaje(F,r3)
+      EnviarMensaje(F,r4)
+    sino
+      si(ultimo = 2)
+        EnviarMensaje(F,r1)
+        EnviarMensaje(V,r2)
+        EnviarMensaje(F,r3)
+        EnviarMensaje(F,r4)
+      sino
+        si(ultimo = 3)
+          EnviarMensaje(F,r1)
+          EnviarMensaje(F,r2)
+          EnviarMensaje(V,r3)
+          EnviarMensaje(F,r4)
+        sino
+          EnviarMensaje(F,r1)
+          EnviarMensaje(F,r2)
+          EnviarMensaje(F,r3)
+          EnviarMensaje(V,r4)
+    Informar("ROBOT_ULTIMO",ultimo)
+  fin
+variables
+  r1,r2,r3,r4:recolectores
+  r0: coordinador
+comenzar
+  AsignarArea(r1,AreaTrabajo)
+  AsignarArea(r1,AreaR1)
+  AsignarArea(r2,AreaTrabajo)
+  AsignarArea(r2,AreaR2)
+  AsignarArea(r3,AreaTrabajo)
+  AsignarArea(r3,AreaR3)
+  AsignarArea(r4,AreaTrabajo)
+  AsignarArea(r4,AreaR4)
+  AsignarArea(r0,AreaJ)
+  Iniciar(r0, 1,1)
+  Iniciar(r1, 9,9)
+  Iniciar(r2, 9,10)
+  Iniciar(r3, 9,11)
+  Iniciar(r4, 9,12)
+fin
