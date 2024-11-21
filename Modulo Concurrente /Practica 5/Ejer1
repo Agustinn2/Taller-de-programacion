@@ -1,1 +1,106 @@
-
+programa Ejer1
+procesos
+  proceso juntarFlores(ES cant:numero)
+  comenzar
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor
+      cant:=cant+1
+  fin
+  proceso recorrerAvJuntandoFlores (ES cant:numero)
+  comenzar
+    repetir 99
+      juntarFlores(cant)
+      mover
+    juntarFlores(cant)
+  fin
+  proceso juntarPapeles(ES cant:numero)
+  comenzar
+    mientras(HayPapelEnLaEsquina)
+      tomarPapel
+      cant:=cant+1
+  fin
+  proceso recorrerCaJuntandoPapeles(ES cant:numero)
+  comenzar
+    derecha
+    repetir 99
+      juntarPapeles(cant)
+      mover
+    juntarPapeles(cant)
+  fin  
+areas
+  AreaR1: AreaP (2,1,2,100)
+  AreaR2: AreaP (3,1,3,100)
+  AreaR3: AreaP (1,98,100,98)
+  AreaR4: AreaP (1,99,100,99)
+  AreaJefe: AreaP (1,1,1,1)
+robots
+  robot EquipoRojo
+  variables
+    cant:numero
+    ID:numero
+  comenzar
+    cant:=0
+    RecibirMensaje(ID,r0)
+    recorrerAvJuntandoFlores(cant)
+    EnviarMensaje(ID, r0)
+    EnviarMensaje(cant,r0)
+  fin
+  robot EquipoAzul
+  variables
+    cant:numero
+    ID:numero
+  comenzar
+    cant:=0
+    RecibirMensaje(ID,r0)
+    recorrerCaJuntandoPapeles(cant)
+    EnviarMensaje(ID,r0)
+    EnviarMensaje(cant,r0)
+  fin
+  robot fiscalizador
+  variables
+    auxCant,ID:numero
+    totalEquipoRojo,totalEquipoAzul:numero
+  comenzar
+    EnviarMensaje(1,r1)
+    EnviarMensaje(2,r2)
+    EnviarMensaje(3,r3)
+    EnviarMensaje(4,r4)
+    totalEquipoRojo:=0
+    totalEquipoAzul:=0
+    repetir 4
+      RecibirMensaje(ID,*)
+      si(ID = 1)
+        RecibirMensaje(auxCant,r1)
+        totalEquipoRojo:= totalEquipoRojo + auxCant
+      sino
+        si(ID = 2)
+          RecibirMensaje(auxCant,r2)
+          totalEquipoRojo:=totalEquipoRojo + auxCant
+        sino
+          si(ID = 3)
+            RecibirMensaje(auxCant,r3)
+            totalEquipoAzul:=totalEquipoAzul + auxCant
+          sino
+            RecibirMensaje(auxCant,r4)
+            totalEquipoAzul:=totalEquipoAzul + auxCant
+    si(totalEquipoAzul > totalEquipoRojo)
+      Informar("GANADOR EquipoAzul",totalEquipoAzul)
+    sino
+      Informar("GANADOR EquipoRojo",totalEquipoRojo)  
+  fin
+variables
+  r1,r2: EquipoRojo
+  r3,r4: EquipoAzul
+  r0: fiscalizador
+comenzar
+  AsignarArea(r1, AreaR1)
+  AsignarArea(r2, AreaR2)
+  AsignarArea(r3, AreaR3)
+  AsignarArea(r4, AreaR4)
+  AsignarArea(r0, AreaJefe)
+  Iniciar(r1, 2,1) 
+  Iniciar(r2, 3,1)
+  Iniciar(r3, 1,98)
+  Iniciar(r4, 1,99)
+  Iniciar(r0, 1,1)
+fin
