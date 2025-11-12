@@ -1,0 +1,147 @@
+
+programa ejercicio6
+procesos
+  proceso recogerFlores
+  comenzar
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor
+  fin
+  proceso recogerFloresYPapeles
+  comenzar
+    mientras (HayPapelEnLaEsquina)
+      tomarPapel
+    recogerFlores
+  fin
+  proceso interseccionFYP(E av:numero; E ca:numero)
+  comenzar
+    BloquearEsquina(av,ca) 
+    mover
+    recogerFloresYPapeles
+    mover
+    LiberarEsquina(av,ca)
+  fin
+  proceso interseccionFlores (E av:numero; E ca:numero)
+  comenzar 
+    BloquearEsquina(av,ca)
+    mover
+    recogerFlores
+    mover
+    LiberarEsquina(av,ca)
+  fin
+  proceso recorrerPerimetroFlores(E tamCuadrante:numero)
+  comenzar
+    repetir tamCuadrante
+      recogerFlores
+      mover
+    derecha
+    repetir 2
+      repetir tamCuadrante-1
+        recogerFlores
+        si((PosAv = 4) & (PosCa = 7))
+          interseccionFlores(5,7)
+        sino
+          si((PosAv= 7) & (PosCa = 6))
+            interseccionFlores(7,5)
+          sino
+            mover
+      derecha
+    repetir tamCuadrante
+      recogerFlores
+      mover
+    derecha
+  fin
+  proceso recorrerPerimetroFYP (E tamCuadrante:numero)
+  comenzar
+    repetir tamCuadrante-1
+      recogerFloresYPapeles
+      si((PosAv = 5) & (PosCa = 6))
+        interseccionFYP(5,7)
+      sino
+        mover
+    derecha
+    repetir 2
+      repetir tamCuadrante
+        recogerFloresYPapeles
+        mover
+      derecha
+    repetir tamCuadrante-1
+      recogerFloresYPapeles
+      si((PosAv = 8) & (PosCa = 5))
+        interseccionFYP(7,5)
+      sino
+        mover
+    derecha
+  fin
+  proceso recorrerCalleFlores(ES seguir:boolean)
+  comenzar
+    si(HayFlorEnLaBolsa)
+      depositarFlor
+      mover
+    sino
+      seguir:=F
+  fin
+  proceso recorrerCalleFyP(ES seguir:boolean)
+  comenzar
+    si((HayFlorEnLaBolsa) | (HayPapelEnLaBolsa))
+      si(HayFlorEnLaBolsa)
+        depositarFlor
+        si(HayPapelEnLaBolsa)
+          depositarPapel
+        mover
+      sino
+        si(HayPapelEnLaBolsa)
+          depositarPapel
+          mover
+    sino
+      seguir:=F
+  fin
+areas
+  ciudad: AreaC(1,1,100,100)
+robots
+  robot recolectores
+  variables
+    ID,Ca:numero
+    seguir :boolean
+  comenzar
+    RecibirMensaje(ID,r0)
+    si(ID = 1)
+      recorrerPerimetroFlores(5)
+    sino
+      recorrerPerimetroFYP(9)
+    EnviarMensaje(ID,r0)
+    RecibirMensaje(Ca,r0)
+    Pos(1,Ca)
+    derecha
+    seguir:=V
+    mientras((seguir) & (PosAv <100)) 
+      si(ID = 1)
+        recorrerCalleFlores(seguir)
+      sino
+        recorrerCalleFyP(seguir)  
+  fin
+  robot fiscalizador
+  variables
+    primero,ult:numero
+  comenzar
+    EnviarMensaje(1,r1)
+    EnviarMensaje(2,r2)
+    RecibirMensaje(primero, *)
+    si (primero = 1)
+      EnviarMensaje(20,r1)
+      EnviarMensaje(21,r2)
+    sino
+      EnviarMensaje(20,r2)
+      EnviarMensaje(21,r1)
+    RecibirMensaje(ult, *)
+  fin
+variables
+  r1,r2: recolectores
+  r0:fiscalizador
+comenzar
+  AsignarArea(r1, ciudad)
+  AsignarArea(r2, ciudad)
+  AsignarArea(r0, ciudad)
+  Iniciar(r1, 2,2)
+  Iniciar(r2,5,5)
+  Iniciar(r0,1,1)
+fin

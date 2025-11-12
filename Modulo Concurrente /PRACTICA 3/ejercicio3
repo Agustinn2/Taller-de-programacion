@@ -1,0 +1,111 @@
+programa ejercicio3
+procesos
+  proceso recogerFlor (ES cant:numero; ES seguir:boolean)
+  comenzar
+    si(HayFlorEnLaEsquina)
+      tomarFlor
+      cant:= cant + 1
+    sino
+      seguir:=F
+  fin
+  proceso enviarIds
+  comenzar
+    EnviarMensaje(1,r1)
+    EnviarMensaje(2,r2)
+    EnviarMensaje(3,r3)
+    EnviarMensaje(4,r4)
+  fin
+  proceso calcularMaximo (ES ganador:numero)
+  variables
+    auxCant,quien,maxCant:numero
+  comenzar
+    maxCant:=-1
+    repetir 4
+      RecibirMensaje(quien, *)
+      si(quien = 1)
+        RecibirMensaje(auxCant,r1)
+      sino
+        si(quien = 2)
+          RecibirMensaje(auxCant,r2)
+        sino
+          si(quien = 3)
+            RecibirMensaje(auxCant,r3)
+          sino
+            RecibirMensaje(auxCant,r4)
+      si(auxCant > maxCant)
+        maxCant:=auxCant
+        ganador:= quien
+  fin
+  proceso enviarEsquinas
+  variables
+    num:numero
+  comenzar
+    repetir 2
+      Random(num,2,10)
+      EnviarMensaje(num,r1)
+      EnviarMensaje(num,r2)
+      EnviarMensaje(num,r3)
+      EnviarMensaje(num,r4)
+  fin
+  proceso juntarUnaFlor(E av:numero; E ca:numero; ES cantFlores:numero; ES seguir:boolean)
+  variables
+    avAct:numero
+  comenzar
+    avAct:= PosAv
+    BloquearEsquina(av,ca)
+    Pos(av,ca)
+    recogerFlor(cantFlores,seguir)
+    Pos(avAct,1)
+    LiberarEsquina(av,ca)
+  fin
+areas
+  areaRecolectores: AreaPC (2,2,10,10)
+  areaJefe: AreaP (1,1,1,1)
+  areaR1: AreaP (2,1,2,1)
+  areaR2: AreaP (3,1,3,1)
+  areaR3: AreaP (4,1,4,1)
+  areaR4: AreaP (5,1,5,1)
+robots
+  robot recolectores
+  variables
+    ID,cantFlores, av,ca:numero
+    seguir:boolean
+  comenzar
+    seguir:= V
+    cantFlores:= 0
+    RecibirMensaje(av,r0)
+    RecibirMensaje(ca,r0)
+    mientras (seguir)
+      juntarUnaFlor(av,ca,cantFlores,seguir)
+    RecibirMensaje(ID, r0)
+    EnviarMensaje(ID,r0)
+    EnviarMensaje(cantFlores,r0) 
+  fin
+  robot jefe
+  variables
+    ganador:numero
+  comenzar
+    enviarEsquinas
+    enviarIds
+    calcularMaximo(ganador)
+    Informar("el robott ganador es el ", ganador) 
+  fin
+variables
+  r1,r2,r3,r4: recolectores
+  r0:jefe
+comenzar
+  AsignarArea(r1, areaRecolectores)
+  AsignarArea(r2, areaRecolectores)
+  AsignarArea(r3, areaRecolectores)
+  AsignarArea(r4, areaRecolectores)
+  AsignarArea(r1,areaR1)
+  AsignarArea(r2,areaR2)
+  AsignarArea(r3,areaR3)
+  AsignarArea(r4,areaR4)
+  AsignarArea(r0, areaJefe)
+  Iniciar(r0, 1,1)
+  Iniciar(r1, 2,1)
+  Iniciar(r2, 3,1)
+  Iniciar(r3, 4,1)
+  Iniciar(r4, 5,1)
+fin

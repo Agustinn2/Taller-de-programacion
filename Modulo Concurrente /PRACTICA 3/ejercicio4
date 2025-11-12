@@ -1,0 +1,85 @@
+programa ejercicio4
+procesos
+  proceso recogerFlor(ES sigue:boolean)
+  comenzar
+    si(HayFlorEnLaEsquina)
+      tomarFlor  
+    sino
+      sigue:=F
+  fin
+  proceso recogerFlores
+  comenzar
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor
+  fin
+areas
+  areaR1: AreaP (9,9,9,9)
+  areaR2: AreaP (9,10,9,10)
+  areaR3: AreaP (9,11,9,11)
+  areaR4: AreaP (9,12,9,12)
+  areaCoordinador: AreaP (1,1,1,1)
+  areaRecolector: AreaPC (10,10,10,10)
+  areaDeposito: AreaC (11,11,11,11)
+robots
+  robot recolectores
+  variables
+    ca,ID,ultimo:numero
+    sigue:boolean
+  comenzar
+    ca := PosCa
+    sigue:=V
+    mientras (sigue)
+      BloquearEsquina(10,10)
+      Pos(10,10)
+      recogerFlor(sigue)
+      si(sigue)
+        BloquearEsquina(11,11)
+        Pos(11,11)
+        LiberarEsquina(10,10)
+        depositarFlor
+        Pos(9,ca)
+        LiberarEsquina(11,11)
+      sino
+        Pos(9,ca)
+        LiberarEsquina(10,10)
+    RecibirMensaje(ID,r0)
+    EnviarMensaje(ID,r0)
+  fin
+  robot coordinador
+  variables
+    ultimo:numero
+  comenzar
+    EnviarMensaje(1,r1)
+    EnviarMensaje(2,r2)
+    EnviarMensaje(3,r3)
+    EnviarMensaje(4,r4)
+    repetir 4
+      RecibirMensaje(ultimo, *)
+    Informar("el robott ultimo fue el ", ultimo)
+    Pos(11,11)
+    recogerFlores
+  fin    
+variables
+  r1,r2,r3,r4: recolectores
+  r0: coordinador
+comenzar
+  AsignarArea(r1, areaR1)
+  AsignarArea(r2, areaR2)
+  AsignarArea(r3, areaR3)
+  AsignarArea(r4, areaR4)
+  AsignarArea(r0,areaCoordinador)
+  AsignarArea(r1, areaRecolector)
+  AsignarArea(r2, areaRecolector)
+  AsignarArea(r3, areaRecolector)
+  AsignarArea(r4, areaRecolector)
+  AsignarArea(r1, areaDeposito)
+  AsignarArea(r2, areaDeposito)
+  AsignarArea(r3, areaDeposito)
+  AsignarArea(r4, areaDeposito)
+  AsignarArea(r0, areaDeposito)
+  Iniciar(r0, 1,1)
+  Iniciar(r1, 9,9)
+  Iniciar(r2, 9,10)
+  Iniciar(r3, 9,11)
+  Iniciar(r4, 9,12)
+fin

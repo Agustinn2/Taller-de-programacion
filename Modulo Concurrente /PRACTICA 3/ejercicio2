@@ -1,0 +1,141 @@
+programa ejercicio2
+procesos
+  proceso recogerFlores(ES cantFlores: numero)
+  comenzar
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor
+      cantFlores:= cantFlores + 1
+  fin
+  proceso recogerPapeles (ES cantPapeles: numero)
+  comenzar
+    mientras(HayPapelEnLaEsquina)
+      tomarPapel
+      cantPapeles:= cantPapeles + 1
+  fin
+  proceso orientarRobot
+  comenzar
+    repetir 2
+      derecha
+  fin
+  proceso esquinaCentralFlores(ES cantFlores:numero)
+  comenzar
+    mover
+    recogerFlores(cantFlores)
+    derecha
+    BloquearEsquina(16,16)
+    mover
+    recogerFlores(cantFlores)
+    orientarRobot
+    mover
+    LiberarEsquina(16,16)
+  fin
+  proceso recorrerEscalonFlores(E tamEscalon:numero; ES cantFlores:numero)
+  comenzar
+    repetir 2 
+      repetir tamEscalon
+        mover
+      recogerFlores(cantFlores)
+      derecha
+    orientarRobot 
+  fin
+  proceso primerRecorridoFlores(ES cantFlores:numero)
+  variables
+    tamEscalon:numero
+  comenzar
+    tamEscalon:=5
+    repetir 4
+      recorrerEscalonFlores(tamEscalon,cantFlores)
+      tamEscalon:= tamEscalon - 1
+    esquinaCentralFlores(cantFlores)
+  fin
+  proceso segundoRecorridoFlores(ES cantFlores:numero)
+  variables
+    tamEscalon:numero
+  comenzar
+    tamEscalon:= 2
+    repetir 4
+      recorrerEscalonFlores(tamEscalon, cantFlores)
+      tamEscalon := tamEscalon + 1
+  fin
+  proceso recorrerEscalonPapeles (E tamEscalon:numero;ES cantPapeles:numero)
+  comenzar
+    repetir 2 
+      repetir tamEscalon
+        mover
+      recogerPapeles(cantPapeles)
+      derecha
+      orientarRobot
+    orientarRobot
+  fin
+  proceso esquinaCentralPapeles(ES cantPapeles:numero)
+  comenzar
+    mover
+    recogerPapeles(cantPapeles)
+    repetir 3
+      derecha
+    BloquearEsquina(16,16)
+    mover
+    recogerPapeles(cantPapeles)
+    orientarRobot
+    mover
+    LiberarEsquina(16,16)
+  fin
+  proceso primerRecorridoPapeles (ES cantPapeles:numero)
+  variables
+    tamEscalon:numero
+  comenzar
+    tamEscalon := 5
+    repetir 4
+      recorrerEscalonPapeles(tamEscalon, cantPapeles)
+      tamEscalon:= tamEscalon - 1
+    esquinaCentralPapeles(cantPapeles)
+  fin
+  proceso segundoRecorridoPapeles (ES cantPapeles:numero)
+  variables
+    tamEscalon:numero
+  comenzar
+    tamEscalon:= 2
+    repetir 4
+      recorrerEscalonPapeles(tamEscalon, cantPapeles)
+      tamEscalon := tamEscalon + 1
+  fin
+areas
+  ciudad: AreaC (1,1,31,30)
+robots
+  robot corredores
+  variables
+    ID,cant:numero
+  comenzar
+    RecibirMensaje(ID,r0)
+    cant:=0
+    si(ID = 1)
+      primerRecorridoFlores(cant)
+      EnviarMensaje(ID,r0)
+      segundoRecorridoFlores(cant)
+    sino
+      primerRecorridoPapeles(cant)
+      EnviarMensaje(ID,r0)
+      segundoRecorridoPapeles(cant)
+    Informar(cant)
+  fin
+  robot jefe
+  variables
+    ganador,perdedor:numero
+  comenzar
+    EnviarMensaje(1,r1)
+    EnviarMensaje(2,r2)
+    RecibirMensaje(ganador, *)
+    Informar("ganador robott ", ganador)
+    RecibirMensaje(perdedor, *)
+  fin
+variables
+  r1,r2:corredores
+  r0:jefe
+comenzar
+  AsignarArea(r1, ciudad)
+  AsignarArea(r2,ciudad)
+  AsignarArea(r0,ciudad)
+  Iniciar(r0,15,1)
+  Iniciar(r1, 1,1)
+  Iniciar(r2,31,1)
+fin

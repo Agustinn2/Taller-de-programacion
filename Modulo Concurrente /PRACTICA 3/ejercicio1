@@ -1,1 +1,88 @@
-
+programa ejercicio1
+procesos
+  proceso recogerFlores(ES cantFlores: numero)
+  comenzar
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor
+      cantFlores:= cantFlores + 1
+  fin
+  proceso recogerPapeles(ES cantPapeles:numero)
+  comenzar
+    mientras(HayPapelEnLaEsquina)
+      tomarPapel
+      cantPapeles:= cantPapeles + 1
+  fin
+  proceso depositarElementos(E cant:numero; E avAct:numero)
+  comenzar
+    repetir cant
+      BloquearEsquina(10,10)
+      Pos(10,10)
+      si(HayFlorEnLaBolsa)
+        depositarFlor
+      sino
+        depositarPapel
+      Pos(avAct,10)
+      LiberarEsquina(10,10)
+  fin
+areas
+  areaFloreros: AreaPC (1,1,5,10)
+  areaPapeleros: AreaPC (6,1,10,9)
+  areaR1: AreaP(6,10,6,10)
+  areaR2: AreaP(7,10,7,10)
+  areaR3: AreaP(8,10,8,10)
+  areaR4: AreaP(9,10,9,10)
+  areaDeposito: AreaC (10,10,10,10)
+robots
+  robot floreros
+  variables
+    cantFlores,av,ca,avAct:numero
+  comenzar
+    cantFlores:=0
+    avAct:= PosAv
+    repetir 5
+      Random(av,1,5)
+      Random(ca,1,10)
+      BloquearEsquina(av,ca)
+      Pos(av,ca)
+      recogerFlores(cantFlores)
+      Pos(avAct,10)
+      LiberarEsquina(av,ca)
+    depositarElementos(cantFlores,avAct)
+  fin
+  robot papeleros
+  variables
+    cantPapeles,av,ca,avAct:numero
+  comenzar
+    cantPapeles:=0
+    avAct:= PosAv
+    repetir 3
+      Random(av,6,10)
+      Random(ca,1,9)
+      BloquearEsquina(av,ca)
+      Pos(av,ca)
+      recogerPapeles(cantPapeles)
+      Pos(avAct,10)
+      LiberarEsquina(av,ca)
+    depositarElementos(cantPapeles,avAct)
+  fin
+variables
+  r1,r2: floreros
+  r3,r4: papeleros
+comenzar
+  AsignarArea(r1, areaFloreros)
+  AsignarArea(r2, areaFloreros)
+  AsignarArea(r3, areaPapeleros)
+  AsignarArea(r4, areaPapeleros)
+  AsignarArea(r1, areaR1)
+  AsignarArea(r2, areaR2)
+  AsignarArea(r3, areaR3)
+  AsignarArea(r4, areaR4)
+  AsignarArea(r1, areaDeposito)
+  AsignarArea(r2, areaDeposito)
+  AsignarArea(r3, areaDeposito)
+  AsignarArea(r4, areaDeposito)
+  Iniciar(r1, 6,10)
+  Iniciar(r2, 7,10)
+  Iniciar(r3, 8,10)
+  Iniciar(r4, 9,10)
+fin

@@ -1,0 +1,104 @@
+programa ejercicio5
+procesos
+  proceso recogerPapel(ES sigue:boolean)
+  comenzar
+    si(HayPapelEnLaEsquina)
+      tomarPapel
+    sino
+      sigue:=F
+  fin
+  proceso accederAFuente(ES sigue: boolean; E av:numero; E ca:numero)
+  comenzar
+    BloquearEsquina(11,11)
+    Pos(11,11)
+    recogerPapel(sigue)
+    Pos(av,ca)
+    LiberarEsquina(11,11)
+  fin
+  proceso avanzar
+  comenzar
+    depositarPapel
+    mover
+  fin
+  proceso enviarIds
+  comenzar
+    EnviarMensaje(1,r1)
+    EnviarMensaje(2,r2)
+    EnviarMensaje(3,r3)
+    EnviarMensaje(4,r4)
+  fin
+  proceso determinarGanador(ES ganador:numero)
+  variables
+    maxPos,auxPos,quien:numero
+  comenzar
+    maxPos:= -1
+    repetir 4
+      RecibirMensaje(quien,*)
+      si(quien = 1)
+        RecibirMensaje(auxPos,r1)
+      sino
+        si(quien = 2)
+          RecibirMensaje(auxPos,r2)
+        sino
+          si(quien = 3)
+            RecibirMensaje(auxPos,r3)
+          sino
+            RecibirMensaje(auxPos,r4)
+      si(auxPos > maxPos)
+        maxPos:= auxPos
+        ganador:=quien
+  fin
+areas
+  areaR1: AreaP (4,1,4,100)
+  areaR2: AreaP (6,1,6,100)
+  areaR3: AreaP (8,1,8,100)
+  areaR4: AreaP (10,1,10,100)
+  areaCoordinador: AreaP (1,1,1,1)
+  areaFuente: AreaPC (11,11,11,11)
+robots
+  robot corredores
+  variables
+    av,ca,ID:numero
+    sigue:boolean
+  comenzar 
+    sigue:=V
+    av:=PosAv
+    ca:=PosCa
+    accederAFuente(sigue,av,ca)
+    mientras((sigue) & (ca < 100))
+      avanzar
+      av:=PosAv
+      ca:=PosCa
+      si(ca < 100)
+        accederAFuente(sigue,av,ca)
+    RecibirMensaje(ID, r0)
+    EnviarMensaje(ID, r0)
+    EnviarMensaje(ca,r0)
+  fin
+  robot coordinador
+  variables
+    ganador:numero
+  comenzar
+    enviarIds
+    determinarGanador(ganador)
+    Informar("el robott que llego mas lejos es ", ganador)
+  fin
+variables
+  r1,r2,r3,r4: corredores
+  r0:coordinador
+comenzar
+  AsignarArea(r1, areaR1)
+  AsignarArea(r2, areaR2)
+  AsignarArea(r3, areaR3)
+  AsignarArea(r4, areaR4)
+  AsignarArea(r1, areaFuente)
+  AsignarArea(r2, areaFuente)
+  AsignarArea(r3, areaFuente)
+  AsignarArea(r4, areaFuente)
+  AsignarArea(r0, areaCoordinador)
+  Iniciar(r1, 4,1)
+  Iniciar(r2, 6,1)
+  Iniciar(r3, 8,1)
+  Iniciar(r4, 10,1)
+  Iniciar(r0, 1,1)
+fin
