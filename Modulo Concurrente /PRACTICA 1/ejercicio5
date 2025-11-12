@@ -1,0 +1,102 @@
+programa ejercicio5
+procesos
+  proceso recogerFlores (ES cantFlores:numero)
+  comenzar
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor
+      cantFlores:= cantFlores + 1
+  fin
+  proceso depositarFlores(E cantFlores:numero)
+  comenzar
+    repetir cantFlores
+      depositarFlor
+  fin
+  proceso recorrerCalle(E totalEsquinas:numero)
+  variables
+    cantFlores:numero
+  comenzar
+    cantFlores:= 0
+    repetir totalEsquinas
+      recogerFlores(cantFlores)
+      mover
+    depositarFlores(cantFlores)
+  fin
+  proceso recorrerAvenida(E totalEsquinas:numero; E ca:numero)
+  variables
+    cantPapeles:numero
+  comenzar
+    cantPapeles:= 0
+    repetir totalEsquinas
+      recogerPapeles(cantPapeles)
+      mover
+    recogerPapeles(cantPapeles)
+    Pos(PosAv, ca)
+    depositarPapeles(cantPapeles)
+  fin
+  proceso recogerPapeles(ES cantPapeles:numero)
+  comenzar
+    mientras(HayPapelEnLaEsquina)
+      tomarPapel
+      cantPapeles:= cantPapeles + 1
+  fin
+  proceso depositarPapeles (E cantPapeles:numero)
+  comenzar
+    repetir cantPapeles
+      depositarPapel
+  fin
+areas
+  ciudad: AreaC (1,1,100,100)
+robots
+  robot robot1
+  variables
+    avenida:numero
+  comenzar
+    avenida:= PosAv
+    derecha
+    recorrerCalle(15)
+    Pos(avenida,PosCa + 5)
+    recorrerCalle(15)
+  fin
+  robot robot3
+  variables
+    avenida:numero
+  comenzar
+    avenida:= PosAv
+    derecha
+    recorrerCalle(30)
+    Pos(avenida,PosCa + 5)
+    recorrerCalle(30)
+  fin
+  robot robot2
+  variables
+    calle:numero
+  comenzar
+    calle:= PosCa
+    recorrerAvenida(20,calle)
+    Pos(PosAv + 5,calle)
+    recorrerAvenida(20,calle)
+  fin
+  robot robot4
+  variables
+    calle:numero
+  comenzar
+    calle:= PosCa
+    recorrerAvenida(10,calle)
+    Pos(PosAv + 5,calle)
+    recorrerAvenida(10,calle)
+  fin
+variables
+  r1: robot1
+  r2:robot2
+  r3:robot3
+  r4:robot4
+comenzar
+  AsignarArea(r1, ciudad)
+  AsignarArea(r2, ciudad)
+  AsignarArea(r3, ciudad)
+  AsignarArea(r4, ciudad)
+  Iniciar(r1, 1,75)
+  Iniciar(r2, 75,80)
+  Iniciar(r3, 70,10)
+  Iniciar(r4, 10,1)
+fin

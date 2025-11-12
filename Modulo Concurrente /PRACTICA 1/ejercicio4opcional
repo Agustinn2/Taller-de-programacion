@@ -1,0 +1,80 @@
+programa ejercicio4
+procesos
+  proceso recogerPapeles
+  comenzar
+    mientras (HayPapelEnLaEsquina)
+      tomarPapel
+  fin
+  proceso recorrerAvenidaAreaPar
+  comenzar
+    repetir 99
+      recogerPapeles
+      mover
+    recogerPapeles
+  fin
+  proceso recogerFlores
+  comenzar
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor
+  fin
+  proceso recorrerAvenidaAreaImpar
+  comenzar
+    repetir 99
+      recogerFlores
+      mover
+    recogerFlores
+  fin
+  proceso recorrerAreaPar
+  variables
+    avenida:numero
+  comenzar
+    avenida:= PosAv
+    repetir 4
+      recorrerAvenidaAreaPar
+      avenida:= avenida + 1
+      Pos(avenida, 1)
+    recorrerAvenidaAreaPar
+  fin
+  proceso recorrerAreaImpar
+  variables
+    avenida:numero
+  comenzar
+    avenida:= PosAv
+    repetir 4
+      recorrerAvenidaAreaImpar
+      avenida:= avenida + 1
+      Pos(avenida, 1)
+    recorrerAvenidaAreaImpar
+  fin
+areas
+  ciudad: AreaC(1,1,100,100)
+robots
+  robot robotImpar
+  variables
+    siguienteArea:numero
+  comenzar
+    repetir 10
+      recorrerAreaImpar
+      siguienteArea:= PosAv + 6
+      si (siguienteArea <= 100)
+        Pos(siguienteArea,1)
+  fin
+  robot robotPar
+  variables
+    siguienteArea:numero
+  comenzar
+    repetir 10
+      recorrerAreaPar
+      siguienteArea:= PosAv + 6
+      si (siguienteArea <= 100)
+        Pos(siguienteArea,1)
+  fin
+variables
+  r1: robotImpar
+  r2: robotPar
+comenzar
+  AsignarArea(r1, ciudad)
+  AsignarArea(r2, ciudad)
+  Iniciar(r1, 1,1)
+  Iniciar(r2, 6,1)
+fin

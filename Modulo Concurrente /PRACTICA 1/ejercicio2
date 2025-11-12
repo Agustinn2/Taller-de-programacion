@@ -1,0 +1,85 @@
+programa ejercicio2
+procesos
+  proceso recogerPapeles(ES cantPapeles:numero)
+  comenzar
+    mientras(HayPapelEnLaEsquina)
+      tomarPapel
+      cantPapeles := cantPapeles + 1
+  fin
+  proceso recorrerPerimetro(ES cantPapeles:numero) 
+  comenzar
+    repetir 10
+      recogerPapeles(cantPapeles)
+      mover
+  fin
+areas
+  areaR1: AreaP (10,11,10,19)
+  areaR2: AreaP(11,20,19,20)
+  areaR3: AreaP (20,11,20,19)
+  areaR4: AreaP(11,10,19,10)
+  areaC1y4: AreaPC (10,10,10,10)
+  areaC2y1: AreaPC(10,20,10,20)
+  areaC3y2:AreaPC(20,20,20,20)
+  areaC4y3:AreaPC(20,10,20,10)
+robots
+  robot robot1
+  variables
+    cantPapeles:numero
+  comenzar
+    cantPapeles:=0
+    recorrerPerimetro(cantPapeles)
+    Informar("Cantidad papeles ",cantPapeles)
+  fin
+  robot robot2
+  variables
+    cantPapeles:numero
+  comenzar
+    cantPapeles:=0
+    derecha
+    recorrerPerimetro(cantPapeles)
+    Informar("Cantidad papeles ",cantPapeles)
+  fin
+  robot robot3
+  variables
+    cantPapeles:numero
+  comenzar
+    cantPapeles:=0
+    derecha
+    derecha
+    recorrerPerimetro(cantPapeles)
+    Informar("Cantidad papeles ",cantPapeles)
+  fin
+  robot robot4
+  variables
+    cantPapeles:numero
+  comenzar
+    cantPapeles:=0
+    derecha
+    derecha
+    derecha
+    recorrerPerimetro(cantPapeles)
+    Informar("Cantidad papeles ",cantPapeles)
+  fin
+variables
+  r1:robot1
+  r2:robot2
+  r3:robot3
+  r4:robot4
+comenzar
+  AsignarArea(r1, areaR1)
+  AsignarArea(r1, areaC1y4)
+  AsignarArea(r1, areaC2y1)
+  AsignarArea(r2, areaC2y1)
+  AsignarArea(r2, areaR2)
+  AsignarArea(r2,areaC3y2)
+  AsignarArea(r3,areaR3)
+  AsignarArea(r3,areaC3y2)
+  AsignarArea(r3,areaC4y3)
+  AsignarArea(r4,areaR4)
+  AsignarArea(r4,areaC1y4)
+  AsignarArea(r4,areaC4y3)
+  Iniciar(r1,10,10)
+  Iniciar(r2,10,20)
+  Iniciar(r3,20,20)
+  Iniciar(r4,20,10)
+fin

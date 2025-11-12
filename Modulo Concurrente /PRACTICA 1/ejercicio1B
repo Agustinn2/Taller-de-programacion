@@ -1,0 +1,54 @@
+programa ejericio1B
+procesos
+  proceso recogerFlores(ES cantFlores:numero)
+  comenzar
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor
+      cantFlores := cantFlores + 1
+  fin
+  proceso depositarFlores (E cantFlores:numero)
+  comenzar
+    repetir cantFlores
+      depositarFlor
+  fin
+  proceso verificarFloresYEsquinas(ES cantFlores:numero; ES esquinasVacias:numero)
+  comenzar
+    si(HayFlorEnLaEsquina)
+      recogerFlores(cantFlores)
+    sino
+      esquinasVacias := esquinasVacias +1
+  fin
+  proceso recorrerAvenida(ES cantFlores:numero; ES esquinasVacias:numero) 
+  comenzar
+    repetir 99
+      verificarFloresYEsquinas(cantFlores,esquinasVacias)
+      mover
+    verificarFloresYEsquinas(cantFlores,esquinasVacias)
+  fin
+areas
+  av1: AreaP (1,1,1,100)
+  av3: AreaP(3,1,3,100)
+  av5: AreaP (5,1,5,100)
+  av7: AreaP(7,1,7,1)
+robots
+  robot robot1
+  variables
+    cantFlores,esquinasVacias:numero
+  comenzar
+    cantFlores:=0
+    esquinasVacias:=0
+    recorrerAvenida(cantFlores,esquinasVacias)
+    Informar("Cantidad flores ",cantFlores)
+    Informar ("Esquinas vacias ",esquinasVacias)
+    depositarFlores(cantFlores)
+  fin
+variables
+  r1,r2,r3: robot1
+comenzar
+  AsignarArea(r1, av1)
+  AsignarArea(r2, av3)
+  AsignarArea(r3, av5)
+  Iniciar(r1, 1,1)
+  Iniciar(r2,3,1)
+  Iniciar(r3,5,1)
+fin

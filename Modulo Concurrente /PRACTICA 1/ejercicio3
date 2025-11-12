@@ -1,0 +1,63 @@
+programa ejercicio3
+procesos
+  proceso recorrerEscalera(ES cantEscalones:numero)
+  variables
+    tamEscalon:numero
+  comenzar
+    tamEscalon:=1
+    repetir 4
+      recorrerEscalon(tamEscalon,cantEscalones)
+      tamEscalon:= tamEscalon + 1
+  fin
+  proceso recorrerEscalon(E tamEscalon:numero;ES cantEscalones:numero)
+  variables
+    cantPapeles,cantFlores:numero
+    diferencia:numero
+  comenzar
+    cantPapeles:=0
+    cantFlores:=0
+    repetir 2
+      repetir tamEscalon
+        recogerPapelesYFlores(cantPapeles,cantFlores)
+        mover
+      derecha
+    orientarRobot
+    diferencia := cantPapeles - cantFlores
+    si(diferencia = 1)
+      cantEscalones:= cantEscalones + 1  
+  fin
+  proceso orientarRobot
+  comenzar
+    repetir 2
+      derecha
+  fin
+  proceso recogerPapelesYFlores(ES cantPapeles:numero; ES cantFlores:numero)
+  comenzar
+    mientras (HayPapelEnLaEsquina)
+      tomarPapel
+      cantPapeles:= cantPapeles + 1
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor
+      cantFlores:= cantFlores + 1
+  fin
+areas
+  ciudad: AreaC (1,1,100,100)
+robots
+  robot robot1
+  variables
+    cantEscalones:numero
+  comenzar
+    cantEscalones:= 0
+    recorrerEscalera(cantEscalones)
+    Informar("Cantidad escalones que superan los papeles por uno ",cantEscalones)
+  fin
+variables
+  r1,r2,r3: robot1
+comenzar
+  AsignarArea(r1, ciudad)
+  AsignarArea(r2, ciudad)
+  AsignarArea(r3, ciudad)
+  Iniciar(r1, 12,14)
+  Iniciar(r2, 17,10)
+  Iniciar(r3, 22,6)
+fin
