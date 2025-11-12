@@ -1,0 +1,134 @@
+programa ejercicio4
+procesos
+  proceso recogerFlores(ES cantFlores: numero)
+  comenzar
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor
+      cantFlores:= cantFlores + 1 
+  fin
+  proceso enviarEsquina(E florero:numero)
+  variables
+    num:numero
+  comenzar
+    si(florero = 1)
+      repetir 2
+        Random(num,40,60)
+        EnviarMensaje(num,r1)
+    sino
+      si(florero = 2)
+        repetir 2
+          Random(num,40,60)
+          EnviarMensaje(num,r2)
+      sino
+        repetir 2
+          Random(num,40,60)
+          EnviarMensaje(num,r3)
+  fin
+  proceso elegirRobott (E florero:numero)
+  comenzar
+    EnviarMensaje(florero, r1)
+    EnviarMensaje(florero, r2)
+    EnviarMensaje(florero, r3)
+  fin
+  proceso finalizarRobotts
+  comenzar
+    EnviarMensaje(0,r1)
+    EnviarMensaje(0,r2)    
+    EnviarMensaje(0,r3)
+  fin
+  proceso enviarIds
+  comenzar
+    EnviarMensaje(1,r1)    
+    EnviarMensaje(2,r2)
+    EnviarMensaje(3,r3)
+  fin
+  proceso depositarFlores(E cantFlores:numero)
+  variables
+    miCa,miAv:numero
+  comenzar
+    miAv:= PosAv
+    miCa:= PosCa
+    BloquearEsquina(10,10)
+    Pos(10,10)
+    repetir cantFlores
+      depositarFlor
+    Pos(miAv,miCa)
+    LiberarEsquina(10,10)
+  fin
+  proceso totalFloresJuntadas (ES total:numero)
+  variables
+    aux:numero
+  comenzar
+    repetir 3
+      RecibirMensaje(aux,*)
+      total:= total + aux
+  fin
+  proceso accederCuadrante( ES cantFlores: numero; E av:numero ;E ca:numero )
+  variables
+    miCa,miAv:numero
+  comenzar
+    miAv:= PosAv
+    miCa:= PosCa
+    BloquearEsquina(av,ca)
+    Pos(av,ca)
+    recogerFlores(cantFlores)
+    Pos(miAv,miCa)
+    LiberarEsquina(av,ca)
+  fin
+areas
+  cuadrante: AreaPC (40,40,60,60)
+  areaR1: AreaP(1,1,1,1)
+  areaR2: AreaP(2,1,2,1)
+  areaR3: AreaP(3,1,3,1)
+  areaJefe: AreaP(4,1,4,1)
+  areadeposito: AreaPC (10,10,10,10)
+robots
+  robot floreros
+  variables 
+    av,ca,cantFlores,ID,accesoID,miCa,miAv:numero
+  comenzar
+    cantFlores:=0
+    RecibirMensaje(ID ,r0)
+    RecibirMensaje(accesoID, r0)
+    mientras (accesoID <> 0)
+      si(accesoID = ID)
+        RecibirMensaje(av,r0)
+        RecibirMensaje(ca,r0)
+        accederCuadrante(cantFlores,av,ca)
+      RecibirMensaje(accesoID,r0)
+    depositarFlores(cantFlores)
+    EnviarMensaje(cantFlores,r0)
+  fin
+  robot fiscalizador
+  variables
+    florero,total:numero
+  comenzar
+    total:=0
+    enviarIds
+    repetir 8
+      Random(florero,1,3)
+      elegirRobott(florero)
+      enviarEsquina(florero)
+    finalizarRobotts
+    totalFloresJuntadas(total)
+    Informar(total)
+  fin
+variables
+  r1,r2,r3 : floreros
+  r0: fiscalizador
+comenzar
+  AsignarArea(r1,areadeposito)
+  AsignarArea(r2,areadeposito)
+  AsignarArea(r3,areadeposito)
+  AsignarArea(r1, areaR1)
+  AsignarArea(r2, areaR2)
+  AsignarArea(r3, areaR3)
+  AsignarArea(r1, cuadrante)
+  AsignarArea(r2, cuadrante)
+  AsignarArea(r3, cuadrante)
+  AsignarArea(r0, areaJefe)
+  Iniciar(r1, 1,1)
+  Iniciar(r2, 2,1)
+  Iniciar(r3, 3,1)
+  Iniciar(r0, 4,1)
+fin

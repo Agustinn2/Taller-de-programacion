@@ -1,0 +1,118 @@
+programa ejercicio2
+procesos
+  proceso recogerFlores(ES cantFlores:numero)
+  comenzar
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor
+      cantFlores:= cantFlores + 1
+  fin
+  proceso recogerPapeles
+  comenzar
+    mientras(HayPapelEnLaEsquina)
+      tomarPapel
+  fin
+  proceso vaciarEsquina(ES cantFlores:numero)
+  comenzar
+    recogerFlores(cantFlores)
+    recogerPapeles
+  fin
+  proceso enviarIds
+  comenzar
+    EnviarMensaje(1,r1)
+    EnviarMensaje(2,r2)
+    EnviarMensaje(3,r3)
+  fin
+  proceso recorrerEtapa(ES cantFlores:numero)
+  comenzar
+    si (PosAv = 1)
+      repetir 9
+        vaciarEsquina(cantFlores)
+        mover
+      vaciarEsquina(cantFlores)
+    sino
+      repetir 10
+        vaciarEsquina(cantFlores)
+        mover
+      vaciarEsquina(cantFlores)
+  fin
+  proceso depositarFlores (ES cantFlores:numero)
+  variables
+    miAv,miCa:numero
+  comenzar
+    miAv:= PosAv
+    miCa:=PosCa
+    BloquearEsquina(50,50)
+    Pos(50,50)
+    repetir cantFlores
+      depositarFlor
+    Pos(miAv,miCa)
+    LiberarEsquina(50,50)
+    cantFlores:=0
+  fin
+  proceso coordinarEtapa(E ID :numero)
+  variables
+    finalice:boolean
+  comenzar
+    si(ID = 1)
+      EnviarMensaje(V,r2)
+      EnviarMensaje(V,r3)
+    sino
+      si(ID = 2)
+        EnviarMensaje(V,r1)
+        EnviarMensaje(V,r3)
+      sino
+        EnviarMensaje(V,r1)
+        EnviarMensaje(V,r2)
+    repetir 2
+      RecibirMensaje(finalice,*)
+  fin
+areas
+  areaJefe: AreaP (1,4,1,4)
+  areaR1: AreaP (1,1,100,1)
+  areaR2: AreaP (1,2,100,2)
+  areaR3: AreaP (1,3,100,3)
+  areaDeposito : AreaC (50,50,50,50)
+robots
+  robot recolectores
+  variables
+    ID,cantFlores:numero
+  comenzar
+    cantFlores:=0
+    RecibirMensaje(ID,r0)
+    derecha
+    repetir 10
+      recorrerEtapa(cantFlores)
+      depositarFlores(cantFlores)
+      coordinarEtapa(ID)
+    EnviarMensaje(V,r0)
+  fin
+  robot fiscalizador
+  variables
+    cant:numero
+    ok:boolean
+  comenzar
+    cant:=0
+    enviarIds
+    repetir 3
+      RecibirMensaje(ok,*) 
+    Pos(50,50)
+    recogerFlores(cant)
+    Informar(cant)
+  fin
+variables
+  r1,r2,r3: recolectores
+  r0: fiscalizador
+comenzar
+  AsignarArea(r1, areaR1)
+  AsignarArea(r2, areaR2)
+  AsignarArea(r3, areaR3)
+  AsignarArea(r0, areaJefe)
+  AsignarArea(r1, areaDeposito)
+  AsignarArea(r2, areaDeposito)
+  AsignarArea(r3, areaDeposito)
+  AsignarArea(r0, areaDeposito)
+  Iniciar(r1, 1,1)
+  Iniciar(r2, 1,2)
+  Iniciar(r3, 1,3)
+  Iniciar(r0, 1,4)
+fin

@@ -1,1 +1,150 @@
-
+programa ejercicio1
+procesos
+  proceso recogerFlores (ES cantFlores:numero)
+  comenzar
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor
+      cantFlores:= cantFlores + 1
+  fin
+  proceso recogerPapeles (ES cantPapeles:numero)
+  comenzar
+    mientras(HayPapelEnLaEsquina)
+      tomarPapel
+      cantPapeles:= cantPapeles + 1
+  fin
+  proceso interseccionFlores(E av:numero E ca:numero ; ES cantFlores:numero)
+  comenzar
+    BloquearEsquina(av,ca)
+    mover
+    recogerFlores(cantFlores)
+    BloquearEsquina(av,ca+1)
+    mover
+    LiberarEsquina(av,ca)
+    recogerFlores(cantFlores)
+    mover
+    LiberarEsquina(av,ca+1)
+    recogerFlores(cantFlores)
+  fin
+  proceso interseccionPapeles (E av:numero E ca:numero ; ES cantPapeles:numero)
+  comenzar
+    recogerPapeles(cantPapeles)
+    BloquearEsquina(av,ca)
+    mover
+    recogerPapeles(cantPapeles)
+    BloquearEsquina(av+1,ca)
+    mover
+    LiberarEsquina(av,ca)
+    recogerPapeles(cantPapeles)
+    mover
+    LiberarEsquina(av+1,ca)
+  fin
+  proceso recorrerAvenida(ES cantFlores:numero)
+  variables
+    av,caSig:numero
+  comenzar
+    repetir 96
+      recogerFlores(cantFlores)
+      mover
+    av:=PosAv
+    caSig:=PosCa+1
+    recogerFlores(cantFlores)
+    interseccionFlores(av,caSig,cantFlores)
+  fin
+  proceso recorrerCalle(ES cantPapeles:numero)
+  variables
+    avSig,ca:numero
+  comenzar
+    derecha
+    avSig:= PosAv + 1
+    ca:=PosCa
+    interseccionPapeles(avSig,ca,cantPapeles)
+    repetir 96
+      recogerPapeles(cantPapeles)
+      mover
+    recogerPapeles(cantPapeles)
+  fin
+  proceso enviarIds
+  comenzar
+    EnviarMensaje(1,r1)
+    EnviarMensaje(2,r2)
+    EnviarMensaje(3,a1)
+    EnviarMensaje(4,a2)
+  fin
+  proceso sumarObjetos (ES equipoRojo:numero; ES equipoAzul:numero)
+  variables
+    auxCant,ID:numero
+  comenzar
+    repetir 4
+      RecibirMensaje(ID,*)  
+      si(ID = 1)
+        RecibirMensaje(auxCant,r1)
+        equipoRojo:=equipoRojo + auxCant
+      sino
+        si(ID = 2)
+          RecibirMensaje(auxCant,r2)
+          equipoRojo:=equipoRojo + auxCant
+        sino
+          si(ID = 3)
+            RecibirMensaje(auxCant,a1)
+            equipoAzul:=equipoAzul + auxCant
+          sino
+            RecibirMensaje(auxCant,a2)
+            equipoAzul:=equipoAzul + auxCant
+  fin
+  proceso informarGanador(E equipoRojo:numero E equipoAzul:numero)
+  comenzar
+    si(equipoRojo > equipoAzul)
+      Informar("ganador equipoRojo",equipoRojo)
+    sino
+      si(equipoAzul > equipoRojo)
+        Informar("ganador equipoAzul",equipoAzul)
+  fin
+areas
+  ciudad: AreaC (1,1,100,100)
+robots
+  robot equipoRojo
+  variables
+    cantFlores,ID:numero
+  comenzar
+    cantFlores:=0
+    recorrerAvenida(cantFlores)
+    RecibirMensaje(ID,r0)
+    EnviarMensaje(ID,r0)
+    EnviarMensaje(cantFlores,r0)
+  fin
+  robot equipoAzul
+  variables
+    cantPapeles,ID:numero
+  comenzar
+    cantPapeles:=0
+    recorrerCalle(cantPapeles)
+    RecibirMensaje(ID,r0)
+    EnviarMensaje(ID,r0)
+    EnviarMensaje(cantPapeles,r0)
+  fin
+  robot fiscalizador
+  variables
+    equipoRojo,equipoAzul:numero
+  comenzar
+    enviarIds
+    equipoRojo:=0
+    equipoAzul:=0
+    sumarObjetos(equipoRojo,equipoAzul)
+    informarGanador(equipoRojo,equipoAzul)
+  fin
+variables
+  r1,r2: equipoRojo
+  a1,a2: equipoAzul
+  r0: fiscalizador
+comenzar
+  AsignarArea(r1, ciudad)
+  AsignarArea(r2, ciudad)
+  AsignarArea(a1, ciudad)
+  AsignarArea(a2, ciudad)
+  AsignarArea(r0, ciudad)
+  Iniciar(r1, 2,1)
+  Iniciar(r2, 3,1)
+  Iniciar(a1, 1,98)
+  Iniciar(a2, 1,99)
+  Iniciar(r0, 1,1)
+fin
