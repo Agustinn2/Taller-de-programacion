@@ -1,4 +1,5 @@
 programa ejercicio3B
+// ACLARO QUE CUANDO HICE ESTE EJERCICIO ESTABA QUEMADISIMO, NOSE SI ESTA BIEN.
 procesos
   proceso recogerPapeles (ES cantPapeles:numero; E N:numero)
   comenzar
