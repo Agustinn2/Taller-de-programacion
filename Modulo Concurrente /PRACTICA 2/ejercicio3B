@@ -1,0 +1,105 @@
+programa ejercicio3B
+procesos
+  proceso recogerFlores(ES cantFlores: numero)
+  comenzar
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor
+      cantFlores:= cantFlores + 1
+  fin
+  proceso recogerPapeles (ES cantPapeles:numero)
+  comenzar
+    mientras(HayPapelEnLaEsquina)
+      tomarPapel
+      cantPapeles:= cantPapeles + 1
+  fin
+  proceso recorrerCalle (ES cant:numero)
+  comenzar
+    si (PosCa = 1)
+      repetir 9 
+        recogerPapeles(cant)
+        mover
+      recogerPapeles(cant)
+    sino
+      repetir 9
+        recogerFlores(cant)
+        mover
+      recogerFlores(cant)
+  fin
+areas
+  ciudad : AreaC(1,1,100,100)
+robots
+  robot equipoA
+  variables
+    cantPapeles,posAv:numero
+    ok:boolean
+  comenzar
+    cantPapeles:= 0
+    derecha
+    si(PosAv = 1)
+      repetir 2
+        recorrerCalle(cantPapeles)
+        EnviarMensaje(V,B1)
+        RecibirMensaje(ok,B1)
+        EnviarMensaje(V,A2)
+        EnviarMensaje(cantPapeles,A2)
+        si (PosAv +10 <30)
+          Pos(PosAv + 11, 1)
+          cantPapeles:= 0
+        RecibirMensaje(ok,A2)
+    sino
+      repetir 2
+        RecibirMensaje(ok,A1)
+        RecibirMensaje(cantPapeles, A1)
+        recorrerCalle(cantPapeles)
+        Informar(cantPapeles)
+        si (PosAv +10 <40)
+          Pos(PosAv + 11, 1)
+          cantPapeles:= 0
+        EnviarMensaje(V,B2)
+        RecibirMensaje(ok,B2)   
+        EnviarMensaje(V,A1)
+  fin
+  robot equipoB
+  variables
+    cantFlores:numero
+    ok:boolean
+  comenzar
+    cantFlores:=0
+    derecha
+    si (PosAv = 1)
+      repetir 2
+        recorrerCalle(cantFlores)
+        EnviarMensaje (V,A1)
+        RecibirMensaje(ok,A1)
+        EnviarMensaje(V,B2)
+        EnviarMensaje(cantFlores, B2)
+        si (PosAv +10 <30)
+          Pos(PosAv + 11, 5)
+          cantFlores:=0
+        RecibirMensaje(ok,B2)
+    sino
+      repetir 2
+        RecibirMensaje(ok,B1)
+        RecibirMensaje(cantFlores,B1)
+        recorrerCalle(cantFlores)
+        Informar(cantFlores)
+        si (PosAv +10 <40)
+          Pos(PosAv + 11, 5)
+          cantFlores:=0
+        EnviarMensaje(V,A2)
+        RecibirMensaje(ok,A2)
+        EnviarMensaje(V,B1)
+  fin
+variables
+  A1,A2: equipoA
+  B1,B2:equipoB
+comenzar
+  AsignarArea(A1, ciudad)
+  AsignarArea(A2, ciudad)
+  AsignarArea(B1, ciudad)
+  AsignarArea(B2, ciudad)
+  Iniciar(A1, 1,1)
+  Iniciar(A2,11,1)
+  Iniciar(B1, 1,5)
+  Iniciar(B2, 11,5)
+fin

@@ -1,0 +1,76 @@
+
+programa ejercicio2
+procesos
+  proceso recogerFloresYPapeles(ES cantFlores:numero ES cantPapeles:numero)
+  comenzar
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor
+      cantFlores:= cantFlores + 1
+    mientras (HayPapelEnLaEsquina)
+      tomarPapel
+      cantPapeles:= cantPapeles + 1
+  fin
+  proceso recorrerEscalera(ES cantEscalones:numero)
+  variables
+    cantFlores,cantPapeles:numero
+  comenzar
+    repetir 4
+      cantFlores:=0
+      cantPapeles:=0
+      recorrerEscalon(cantFlores,cantPapeles)
+      si(cantFlores > cantPapeles)
+        cantEscalones:= cantEscalones + 1 
+      orientarRobot
+  fin
+  proceso orientarRobot
+  comenzar
+    repetir 3
+      derecha
+  fin 
+  proceso recorrerEscalon(ES cantFlores:numero ES cantPapeles:numero)
+  variables 
+    alto:numero
+  comenzar
+    Random(alto,1,5)
+    repetir alto
+      recogerFloresYPapeles(cantFlores, cantPapeles)
+      mover
+    derecha
+    recogerFloresYPapeles(cantFlores, cantPapeles)
+    mover
+  fin
+  
+areas
+  ciudad: AreaC (1,1,100,100)
+robots
+  robot robot1
+  variables
+    cantEscalones:numero
+  comenzar
+    cantEscalones:=0
+    recorrerEscalera(cantEscalones)
+    EnviarMensaje(cantEscalones,r4)
+  fin
+  robot jefe
+  variables
+    suma,aux:numero
+  comenzar
+    suma:=0
+    repetir 3
+      RecibirMensaje(aux,*)
+      suma := suma + aux
+    Informar(suma)
+  fin
+variables
+  r1,r2,r3: robot1
+  r4:jefe
+comenzar
+  AsignarArea(r1, ciudad)
+  AsignarArea(r2, ciudad)
+  AsignarArea(r3, ciudad)
+  AsignarArea(r4, ciudad)
+  Iniciar(r4, 1,1)
+  Iniciar(r1, 2,1)
+  Iniciar(r2, 7,1)
+  Iniciar(r3, 12,1)
+fin

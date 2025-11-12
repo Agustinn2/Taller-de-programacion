@@ -1,0 +1,51 @@
+programa ejercicio1
+procesos
+  proceso recogerFlores(ES cantFlores:numero)
+  comenzar
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor
+      cantFlores:= cantFlores + 1
+  fin
+  proceso recorrerAvenida(ES cantFlores:numero)
+  comenzar
+    repetir 9
+      recogerFlores(cantFlores)
+      mover
+    recogerFlores(cantFlores)
+  fin
+areas
+  ciudad: AreaC (1,1,100,100)
+robots
+  robot robot1
+  variables
+    cantFlores,auxCant,diferencia:numero
+  comenzar
+    cantFlores:= 0
+    recorrerAvenida(cantFlores)
+    EnviarMensaje(cantFlores,r2)
+    RecibirMensaje(auxCant,r2)
+    si(cantFlores > auxCant)
+      diferencia := cantFlores - auxCant
+      Informar("Difencia del perdedor ", diferencia)
+  fin
+  robot robot2
+  variables
+    cantFlores,auxCant,diferencia:numero
+  comenzar
+    cantFlores:=0
+    recorrerAvenida(cantFlores)
+    EnviarMensaje(cantFlores,r1)
+    RecibirMensaje(auxCant,r1)
+    si(cantFlores > auxCant)
+      diferencia := cantFlores - auxCant
+      Informar("Difencia del perdedor ", diferencia)
+  fin
+variables
+  r1: robot1
+  r2: robot2
+comenzar
+  AsignarArea(r1, ciudad)
+  AsignarArea(r2, ciudad)
+  Iniciar(r1, 1, 1)
+  Iniciar(r2, 2,11)
+fin

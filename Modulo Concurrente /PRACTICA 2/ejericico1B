@@ -1,0 +1,59 @@
+programa ejercicio1B
+procesos
+  proceso recogerFlores(ES cantFlores:numero)
+  comenzar
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor
+      cantFlores:= cantFlores + 1
+  fin
+  proceso recorrerAvenida(ES cantFlores:numero)
+  comenzar
+    repetir 9
+      recogerFlores(cantFlores)
+      mover
+    recogerFlores(cantFlores)
+  fin
+areas
+  areaR1: AreaP (1,1,1,10)
+  areaR2: AreaP(2,11,2,20)
+  areaR3: AreaP(2,1,2,1)
+robots
+  robot robot1
+  variables
+    cantFlores,id:numero
+  comenzar
+    cantFlores:= 0
+    RecibirMensaje(id,r3)
+    recorrerAvenida(cantFlores)
+    EnviarMensaje(id,r3)
+    EnviarMensaje(cantFlores,r3)
+  fin
+  robot jefe
+  variables 
+    diferencia,cantR1,cantR2,id:numero
+  comenzar
+    EnviarMensaje(1,r1)
+    EnviarMensaje(2,r2)
+    repetir 2 
+      RecibirMensaje(id,*)
+      si(id = 1)
+        RecibirMensaje(cantR1,r1)
+      sino
+        RecibirMensaje(cantR2,r2)
+    si(cantR1 > cantR2)
+      diferencia := cantR1 - cantR2 
+    sino
+      diferencia := cantR2 - cantR1
+    Informar("diferencia del perdedor", diferencia)
+  fin
+variables
+  r1,r2: robot1
+  r3: jefe
+comenzar
+  AsignarArea(r1, areaR1)
+  AsignarArea(r2, areaR2)
+  AsignarArea(r3, areaR3)
+  Iniciar(r1, 1, 1)
+  Iniciar(r2, 2,11)
+  Iniciar(r3,2,1)
+fin

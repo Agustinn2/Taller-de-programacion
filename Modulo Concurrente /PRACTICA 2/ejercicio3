@@ -1,0 +1,80 @@
+programa ejercicio3
+procesos
+  proceso recogerFlores(ES cantFlores: numero)
+  comenzar
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor
+      cantFlores:= cantFlores + 1
+  fin
+  proceso recogerPapeles (ES cantPapeles:numero)
+  comenzar
+    mientras(HayPapelEnLaEsquina)
+      tomarPapel
+      cantPapeles:= cantPapeles + 1
+  fin
+  proceso recorrerCalle (ES cant:numero)
+  comenzar
+    si (PosCa = 1)
+      repetir 9 
+        recogerPapeles(cant)
+        mover
+      recogerPapeles(cant)
+    sino
+      repetir 9
+        recogerFlores(cant)
+        mover
+      recogerFlores(cant)
+  fin
+areas
+  areaA1: AreaP (1,1,10,1)
+  areaA2: AreaP (11,1,20,1)
+  areaB1: AreaP (1,5,10,5)
+  areaB2: AreaP (11,5,20,5)
+robots
+  robot equipoA
+  variables
+    cantPapeles:numero
+    ok:boolean
+  comenzar
+    cantPapeles:= 0
+    derecha
+    si(PosAv = 1)
+      recorrerCalle(cantPapeles)
+      EnviarMensaje(V,B1)
+      RecibirMensaje(ok,B1)
+      EnviarMensaje(cantPapeles,A2)
+    sino
+      RecibirMensaje(cantPapeles, A1)
+      recorrerCalle(cantPapeles)
+      Informar("Equipo_A",cantPapeles)  
+  fin
+  robot equipoB
+  variables
+    cantFlores:numero
+    ok:boolean
+  comenzar
+    cantFlores:=0
+    derecha
+    si (PosAv = 1)
+      recorrerCalle(cantFlores)
+      EnviarMensaje (V,A1)
+      RecibirMensaje(ok,A1)
+      EnviarMensaje(cantFlores, B2)
+    sino
+      RecibirMensaje(cantFlores,B1)
+      recorrerCalle(cantFlores)
+      Informar("Equipo_B" ,cantFlores)
+  fin
+variables
+  A1,A2: equipoA
+  B1,B2:equipoB
+comenzar
+  AsignarArea(A1, areaA1)
+  AsignarArea(A2, areaA2)
+  AsignarArea(B1, areaB1)
+  AsignarArea(B2, areaB2)
+  Iniciar(A1, 1,1)
+  Iniciar(A2,11,1)
+  Iniciar(B1, 1,5)
+  Iniciar(B2, 11,5)
+fin
