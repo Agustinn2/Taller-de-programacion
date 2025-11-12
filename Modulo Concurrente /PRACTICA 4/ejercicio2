@@ -1,0 +1,104 @@
+programa ejercicio2
+procesos
+  proceso recogerPapelProductor(ES cantPapeles:numero)
+  comenzar
+    mientras((HayPapelEnLaEsquina)&(cantPapeles < 5))
+      tomarPapel
+      cantPapeles:= cantPapeles + 1
+  fin
+  proceso recogerPapelConsumidor(ES cantPapeles:numero; E cantRandom:numero)
+  comenzar
+    mientras((HayPapelEnLaEsquina)&(cantPapeles < cantRandom))
+      tomarPapel
+      cantPapeles:= cantPapeles + 1
+  fin
+  proceso depositarPapelesProductor (E av:numero E ca:numero)
+  comenzar
+    BloquearEsquina(50,50)
+    Pos(50,50)
+    repetir 5
+      depositarPapel
+    Pos(av,ca)
+    LiberarEsquina(50,50)
+  fin
+  proceso contarPapeles(ES cantPapeles:numero; ES intentos:numero; E cantRandom:numero)
+  comenzar
+    recogerPapelConsumidor(cantPapeles,cantRandom)
+    si(cantPapeles = cantRandom)
+      intentos:=0
+    sino
+      depositarPapelesConsumidor(cantPapeles)
+      intentos:= intentos + 1
+  fin    
+  proceso depositarPapelesConsumidor(E cant:numero)
+  comenzar
+    repetir cant
+      depositarPapel
+  fin
+  proceso recorrerAvenida
+  variables
+    av,ca,cantPapeles:numero
+  comenzar
+    cantPapeles:=0
+    repetir 99
+      mientras(HayPapelEnLaEsquina)
+        av:=PosAv
+        ca:=PosCa
+        recogerPapelProductor(cantPapeles)
+        si(cantPapeles = 5)
+          depositarPapelesProductor(av,ca)
+          cantPapeles:=0
+      mover 
+    mientras(HayPapelEnLaEsquina)
+      av:=PosAv
+      ca:=PosCa
+      recogerPapelProductor(cantPapeles)
+      si(cantPapeles = 5)
+        depositarPapelesProductor(av,ca)
+        cantPapeles:=0
+  fin
+areas
+  areaDeposito: AreaC (50,50,50,50)
+  areaR1: AreaP (5,1,5,100)
+  areaR2: AreaP (10,1,10,100)
+  areaR3: AreaP (11,1,11,1)
+  areaR4: AreaP(12,1,12,1)
+robots
+  robot productores
+  comenzar
+    recorrerAvenida
+  fin
+  robot consumidores
+  variables
+    cantRandom,intentos,cantPapeles,av:numero
+  comenzar
+    av:=PosAv
+    intentos:=0
+    mientras(intentos <> 8)
+      cantPapeles:=0
+      Random(cantRandom, 2,5)
+      BloquearEsquina(50,50)
+      Pos(50,50)
+      contarPapeles(cantPapeles,intentos,cantRandom)
+      Pos(av,1)
+      LiberarEsquina(50,50)
+      si(cantPapeles = cantRandom)
+        depositarPapelesConsumidor(cantPapeles)
+  fin
+variables
+  r1,r2: productores
+  r3,r4: consumidores
+comenzar
+  AsignarArea(r1, areaR1)
+  AsignarArea(r2, areaR2)
+  AsignarArea(r3, areaR3)
+  AsignarArea(r4, areaR4)
+  AsignarArea(r1, areaDeposito)
+  AsignarArea(r2, areaDeposito)
+  AsignarArea(r3, areaDeposito)
+  AsignarArea(r4, areaDeposito)
+  Iniciar(r1, 5,1)
+  Iniciar(r2, 10,1)
+  Iniciar(r3, 11,1)
+  Iniciar(r4, 12,1)
+fin

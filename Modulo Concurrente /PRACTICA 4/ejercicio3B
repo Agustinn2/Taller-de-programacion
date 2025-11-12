@@ -1,0 +1,115 @@
+programa ejercicio3B
+procesos
+  proceso recogerPapeles (ES cantPapeles:numero; E N:numero)
+  comenzar
+    mientras((HayPapelEnLaEsquina)&(cantPapeles < N))
+      tomarPapel
+      cantPapeles:=cantPapeles + 1
+  fin
+areas
+  areaR1: AreaP (1,1,1,100)
+  areaR2: AreaP (2,1,2,100)
+  areaR3: AreaP (3,1,3,100)
+  areaCoordinador: AreaP (4,1,4,1)
+robots
+  robot trabajadores
+  variables
+    ID,cantPapeles,N:numero
+    termine,termineAvenidaR1,termineAvenidaR2,termineAvenidaR3,soyUltimo,soySegundo:boolean
+  comenzar
+    RecibirMensaje(ID, r0)
+    cantPapeles:=0
+    Random(N,1,5)
+    termineAvenidaR1:=F
+    termineAvenidaR2:=F
+    termineAvenidaR3:=F
+    soyUltimo:=F
+    soySegundo:=F
+    repetir 99
+      mientras(HayPapelEnLaEsquina)
+        recogerPapeles(cantPapeles,N)
+        si(cantPapeles = N)
+          si(ID = 1)
+            si (~termineAvenidaR2)
+              EnviarMensaje(F,r2)
+              RecibirMensaje(termineAvenidaR2,r2)
+            si(~termineAvenidaR3)
+              EnviarMensaje(F,r3)
+              RecibirMensaje(termineAvenidaR3,r3)
+            si((termineAvenidaR2) & (termineAvenidaR3))
+              soyUltimo:=V
+          sino  
+            si(ID = 2)
+              si(~termineAvenidaR1)
+                EnviarMensaje(F,r1)
+                RecibirMensaje(termineAvenidaR1,r1)
+              si(~termineAvenidaR3)
+                EnviarMensaje(F,r3)
+                RecibirMensaje(termineAvenidaR3,r3)
+              si((termineAvenidaR1) & (termineAvenidaR3))
+                soyUltimo:=V
+            sino
+              si(ID = 3)
+                si (~termineAvenidaR1)
+                  EnviarMensaje(F,r1)
+                  RecibirMensaje(termineAvenidaR1,r1)
+                si(~termineAvenidaR2)                
+                  EnviarMensaje(F,r2)
+                  RecibirMensaje(termineAvenidaR2,r2)
+                si((termineAvenidaR1) & (termineAvenidaR2))
+                  soyUltimo:=V
+          cantPapeles:=0
+          Random(N,1,5)
+      mover
+    si((ID = 1) & (~soyUltimo))
+      EnviarMensaje(V,r2)
+      EnviarMensaje(V,r3)
+      si((termineAvenidaR2) & (~termineAvenidaR3))
+        soySegundo:=V
+      sino
+        si((~termineAvenidaR2) & (termineAvenidaR3))
+          soySegundo:=V
+    sino  
+      si((ID = 2) & (~soyUltimo))
+        EnviarMensaje(V,r3)
+        EnviarMensaje(V,r1)
+        si((~termineAvenidaR1)&(termineAvenidaR3))
+          soySegundo:=V
+        sino
+          si((termineAvenidaR1) &(~termineAvenidaR3))
+            soySegundo:=V
+      sino
+        si((ID = 3) & (~soyUltimo))
+          EnviarMensaje(V,r1)
+          EnviarMensaje(V,r2) 
+          si((~termineAvenidaR1)&(termineAvenidaR2))
+            soySegundo:=V
+          sino
+            si((termineAvenidaR1)&(~termineAvenidaR2))
+              soySegundo:=V
+    si(soySegundo)
+      RecibirMensaje(termine,*)
+    si (~soyUltimo) & (~soySegundo)
+      repetir 2
+        RecibirMensaje(termine,*)
+    Informar(soySegundo) 
+  fin
+  robot coordinador
+  comenzar
+    EnviarMensaje(1,r1)
+    EnviarMensaje(2,r2)
+    EnviarMensaje(3,r3)
+  fin
+variables
+  r1,r2,r3: trabajadores
+  r0:coordinador
+comenzar
+  AsignarArea(r1, areaR1)
+  AsignarArea(r2, areaR2)
+  AsignarArea(r3, areaR3)
+  AsignarArea(r0, areaCoordinador)
+  Iniciar(r1, 1,1)
+  Iniciar(r2, 2,1)
+  Iniciar(r3, 3,1)
+  Iniciar(r0, 4,1)
+fin

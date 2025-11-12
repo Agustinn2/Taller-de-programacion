@@ -1,0 +1,80 @@
+programa ejercicio1
+procesos
+  proceso enviarIds  
+  comenzar
+    EnviarMensaje(1,r1)
+    EnviarMensaje(2,r2)
+    EnviarMensaje(3,r3)
+  fin
+  proceso recogerFlores (E flores:numero)
+  comenzar
+    repetir flores
+      tomarFlor
+  fin
+  proceso avanzar (E flores:numero;ES av:numero; ES ca:numero)
+  comenzar
+    repetir flores
+      si(ca < 100)
+        depositarFlor
+        mover
+        av:=PosAv
+        ca:=PosCa
+  fin
+areas
+  ciudad: AreaC (1,1,100,100)
+robots
+  robot cliente
+  variables
+    ID,randomFlores,av,ca:numero
+    seguir,ACK: boolean
+  comenzar
+    av:=PosAv
+    ca:=PosCa
+    RecibirMensaje(ID, r0)
+    mientras (seguir)
+      Random(randomFlores, 1,4)
+      EnviarMensaje(ID,r0)
+      EnviarMensaje(randomFlores,r0)
+      EnviarMensaje(av,r0)
+      EnviarMensaje(ca+1,r0)
+      RecibirMensaje(ACK,r0)
+      Pos(av,ca+1)
+      recogerFlores(randomFlores)
+      Pos(av,ca)
+      avanzar(flores,av,ca)
+      si(ca = 100)
+        EnviarMensaje(0,r0)
+        seguir:= F     
+  fin
+  robot servidor
+  variables
+    ID,N: numero
+  comenzar
+    enviarIds
+    mientras (terminados <> 3)
+      repetir 3
+        RecibirMensaje(ID, *)
+        si (ID = 1)
+          RecibirMensaje(N,r1)
+          si(N <> 0)          
+            RecibirMensaje()
+        sino
+          si(ID = 2)
+            RecibirMensaje(N,r2)
+          sino
+            RecibirMensaje(N,r3)
+          
+  fin  
+variables
+  r1,r2,r3: cliente
+  r0: servidor
+comenzar
+  AsignarArea(r1, ciudad)
+  AsignarArea(r2, ciudad)
+  AsignarArea(r3, ciudad)
+  AsignarArea(r0, ciudad)
+  Iniciar(r1, 1,1)
+  Iniciar(r2, 1,1)
+  Iniciar(r3, 1,1)
+  Iniciar(r0, 100,100)
+fin
